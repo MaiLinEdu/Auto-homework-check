@@ -3,22 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/lib/store";
+import { useI18n } from "@/i18n/provider";
 import { cn } from "@/lib/utils";
 
 const teacherNav = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Assignments", href: "/assignments" },
-  { label: "Grading", href: "/grading" },
+  { labelKey: "sidebar.dashboard", href: "/dashboard" },
+  { labelKey: "sidebar.assignments", href: "/assignments" },
+  { labelKey: "sidebar.grading", href: "/grading" },
 ];
 
 const studentNav = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "My Submissions", href: "/submissions" },
+  { labelKey: "sidebar.dashboard", href: "/dashboard" },
+  { labelKey: "sidebar.mySubmissions", href: "/submissions" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
+  const { t } = useI18n();
 
   const navItems =
     user?.role === "student" ? studentNav : teacherNav;
@@ -26,7 +28,9 @@ export default function Sidebar() {
   return (
     <aside className="flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
       <div className="flex h-14 items-center border-b px-4">
-        <span className="text-lg font-bold text-primary-700">GradeAI</span>
+        <span className="text-lg font-bold text-primary-700">
+          {t("common.appName")}
+        </span>
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
@@ -41,7 +45,7 @@ export default function Sidebar() {
                 : "text-gray-700 hover:bg-gray-100"
             )}
           >
-            {item.label}
+            {t(item.labelKey)}
           </Link>
         ))}
       </nav>
@@ -55,7 +59,7 @@ export default function Sidebar() {
           onClick={logout}
           className="mt-2 w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
         >
-          Sign out
+          {t("common.signOut")}
         </button>
       </div>
     </aside>

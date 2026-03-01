@@ -6,7 +6,7 @@ import { useAuthStore } from "@/lib/store";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 
-export default function DashboardLayout({
+export default function GradingLayout({
   children,
 }: {
   children: React.ReactNode;

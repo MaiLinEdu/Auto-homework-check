@@ -62,10 +62,14 @@ export async function createAssignment(data: AssignmentCreateRequest): Promise<A
 export async function uploadSubmission(
   assignmentId: string,
   files: File[],
+  markSchemeId?: string,
+  syllabusId?: string,
 ): Promise<Submission> {
   const formData = new FormData();
   formData.append("assignment_id", assignmentId);
   files.forEach((file) => formData.append("files", file));
+  if (markSchemeId) formData.append("mark_scheme_id", markSchemeId);
+  if (syllabusId) formData.append("syllabus_id", syllabusId);
 
   const res = await api.post<Submission>("/submissions/upload", formData, {
     headers: { "Content-Type": "multipart/form-data" },
@@ -100,6 +104,49 @@ export async function submitTeacherReview(
   reviews: { question_number: string; teacher_score?: number; teacher_feedback?: string }[],
 ): Promise<{ message: string }> {
   const res = await api.post(`/grading/review/${gradingResultId}`, reviews);
+  return res.data;
+}
+
+// --- AI Report Generation ---
+export interface ParentReportRequest {
+  grading_result_id: string;
+  student_name: string;
+  subject: string;
+  language: "bilingual" | "en" | "zh";
+}
+
+export interface ParentReport {
+  performance_summary: string;
+  core_error_analysis: string;
+  improvement_suggestions: string;
+  percentile: number;
+  mean_score: number;
+  std_dev: number;
+  student_score: number;
+  total_possible: number;
+}
+
+export async function generateParentReport(
+  data: ParentReportRequest,
+): Promise<ParentReport> {
+  const res = await api.post<ParentReport>("/grading/generate-report", data);
+  return res.data;
+}
+
+// --- Dashboard Statistics ---
+export interface DashboardStats {
+  total_assignments: number;
+  pending_grading: number;
+  completed: number;
+  total_students: number;
+  avg_score: number;
+  grade_distribution: { range: string; count: number }[];
+  knowledge_heatmap: { topic: string; error_count: number; module: string }[];
+  monthly_progress: { month: string; graded: number; pending: number }[];
+}
+
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const res = await api.get<DashboardStats>("/dashboard/stats");
   return res.data;
 }
 

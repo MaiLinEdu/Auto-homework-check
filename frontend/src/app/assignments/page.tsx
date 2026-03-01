@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getAssignments } from "@/lib/api";
+import { useI18n } from "@/i18n/provider";
 import type { Assignment } from "@/types";
 
 export default function AssignmentsPage() {
+  const { t } = useI18n();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,32 +21,34 @@ export default function AssignmentsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Assignments</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {t("assignments.title")}
+        </h1>
         <Link
           href="/assignments/new"
           className="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
         >
-          New Assignment
+          {t("assignments.newAssignment")}
         </Link>
       </div>
 
       {loading ? (
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-gray-500">{t("common.loading")}</p>
       ) : assignments.length === 0 ? (
-        <p className="text-gray-500">No assignments yet.</p>
+        <p className="text-gray-500">{t("assignments.noAssignments")}</p>
       ) : (
         <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                  Title
+                  {t("assignments.title")}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                  Status
+                  {t("assignments.status")}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                  Due Date
+                  {t("assignments.dueDate")}
                 </th>
                 <th className="px-4 py-3" />
               </tr>
@@ -61,14 +65,16 @@ export default function AssignmentsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">
-                    {a.due_date ? new Date(a.due_date).toLocaleDateString() : "—"}
+                    {a.due_date
+                      ? new Date(a.due_date).toLocaleDateString()
+                      : "—"}
                   </td>
                   <td className="px-4 py-3 text-right text-sm">
                     <Link
                       href={`/assignments/${a.id}`}
                       className="text-primary-600 hover:underline"
                     >
-                      View
+                      {t("assignments.view")}
                     </Link>
                   </td>
                 </tr>

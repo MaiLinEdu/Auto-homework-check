@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useI18n } from "@/i18n/provider";
 import api from "@/lib/api";
 import type { Submission } from "@/types";
 
 export default function SubmissionsPage() {
+  const { t } = useI18n();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,22 +31,24 @@ export default function SubmissionsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">My Submissions</h1>
+      <h1 className="text-2xl font-bold text-gray-900">
+        {t("sidebar.mySubmissions")}
+      </h1>
 
       {loading ? (
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-gray-500">{t("common.loading")}</p>
       ) : submissions.length === 0 ? (
-        <p className="text-gray-500">No submissions yet.</p>
+        <p className="text-gray-500">{t("common.noData")}</p>
       ) : (
         <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                  Submitted
+                  {t("grading.submittedAt")}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                  Status
+                  {t("grading.status")}
                 </th>
                 <th className="px-4 py-3" />
               </tr>
@@ -70,7 +74,7 @@ export default function SubmissionsPage() {
                         href={`/grading/${s.id}`}
                         className="text-primary-600 hover:underline"
                       >
-                        View Feedback
+                        {t("common.view")}
                       </Link>
                     )}
                   </td>

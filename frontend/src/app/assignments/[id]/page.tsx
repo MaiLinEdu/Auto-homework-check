@@ -3,11 +3,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { getAssignment } from "@/lib/api";
+import { useI18n } from "@/i18n/provider";
 import FileUploadZone from "@/components/assignments/FileUploadZone";
 import type { Assignment } from "@/types";
 
 export default function AssignmentDetailPage() {
   const params = useParams();
+  const { t } = useI18n();
   const [assignment, setAssignment] = useState<Assignment | null>(null);
 
   const load = useCallback(() => {
@@ -20,7 +22,8 @@ export default function AssignmentDetailPage() {
     load();
   }, [load]);
 
-  if (!assignment) return <p className="text-gray-500">Loading...</p>;
+  if (!assignment)
+    return <p className="text-gray-500">{t("common.loading")}</p>;
 
   return (
     <div className="space-y-6">
@@ -30,13 +33,18 @@ export default function AssignmentDetailPage() {
         {assignment.due_date && (
           <>
             <span>&middot;</span>
-            <span>Due {new Date(assignment.due_date).toLocaleDateString()}</span>
+            <span>
+              {t("assignments.dueDate")}{" "}
+              {new Date(assignment.due_date).toLocaleDateString()}
+            </span>
           </>
         )}
       </div>
 
       <section className="rounded-lg border bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Submit Assignment</h2>
+        <h2 className="mb-4 text-lg font-semibold">
+          {t("assignments.submitAssignment")}
+        </h2>
         <FileUploadZone assignmentId={assignment.id} />
       </section>
     </div>

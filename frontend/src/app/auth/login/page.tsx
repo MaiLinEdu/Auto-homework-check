@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { login } from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
+import { useI18n } from "@/i18n/provider";
+import LanguageToggle from "@/components/layout/LanguageToggle";
 
 export default function LoginPage() {
   const router = useRouter();
   const { setAuth } = useAuthStore();
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +26,7 @@ export default function LoginPage() {
       setAuth(res.user, res.access_token);
       router.push("/dashboard");
     } catch {
-      setError("Invalid email or password.");
+      setError(t("auth.invalidCredentials"));
     } finally {
       setLoading(false);
     }
@@ -31,21 +34,22 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="absolute right-6 top-6">
+        <LanguageToggle />
+      </div>
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            GradeAI
+            {t("common.appName")}
           </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            AI-Powered International Curriculum Grading
-          </p>
+          <p className="mt-2 text-sm text-gray-600">{t("auth.tagline")}</p>
         </div>
 
         <form
           onSubmit={handleSubmit}
           className="mt-8 space-y-6 rounded-lg bg-white p-8 shadow"
         >
-          <h2 className="text-xl font-semibold">Sign in</h2>
+          <h2 className="text-xl font-semibold">{t("auth.signIn")}</h2>
 
           {error && (
             <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">
@@ -55,8 +59,11 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("auth.email")}
               </label>
               <input
                 id="email"
@@ -68,8 +75,11 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("auth.password")}
               </label>
               <input
                 id="password"
@@ -87,13 +97,16 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 disabled:opacity-50"
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? t("auth.signingIn") : t("auth.signIn")}
           </button>
 
           <p className="text-center text-sm text-gray-600">
-            Don&apos;t have an account?{" "}
-            <Link href="/auth/register" className="text-primary-600 hover:underline">
-              Register
+            {t("auth.noAccount")}{" "}
+            <Link
+              href="/auth/register"
+              className="text-primary-600 hover:underline"
+            >
+              {t("auth.signUp")}
             </Link>
           </p>
         </form>

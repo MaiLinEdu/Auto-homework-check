@@ -6,6 +6,7 @@ from app.api.v1.endpoints import (
     auth,
     assignments,
     curriculum,
+    dashboard,
     grading,
     mark_schemes,
     submissions,
@@ -21,3 +22,4 @@ api_router.include_router(mark_schemes.router, prefix="/mark-schemes", tags=["Ma
 api_router.include_router(assignments.router, prefix="/assignments", tags=["Assignments"])
 api_router.include_router(submissions.router, prefix="/submissions", tags=["Submissions"])
 api_router.include_router(grading.router, prefix="/grading", tags=["Grading"])
+api_router.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
